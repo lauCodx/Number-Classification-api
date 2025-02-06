@@ -5,19 +5,26 @@ const { isArmstrong, isPrime, isPerfect, getDigitSum } = require('../helper/help
 
 router.get('/classify-number', async (req, res) => {
     try {
-        const number = req.query.number; 
+        const number = req.query.number;
+
         if (!number) {
-            return res.status(400).json({ error: 'Number is required' });
+            return res.status(400).json({ error: true, number: "" });
+        }
+
+        const parsedNumber = parseInt(number, 10);
+
+        if (isNaN(parsedNumber)) {
+            return res.status(400).json({ error: true, number });
         }
 
         const properties = [];
-        if (isArmstrong(number)) properties.push('armstrong');
-        properties.push(number % 2 === 0 ? 'even' : 'odd');
+        if (isArmstrong(parsedNumber)) properties.push('armstrong');
+        properties.push(parsedNumber % 2 === 0 ? 'even' : 'odd');
 
         let funFact;
         try {
             const response = await axios.get(
-                `http://numbersapi.com/${number}/math?json`,
+                `http://numbersapi.com/${parsedNumber}/math?json`,
                 { timeout: 3000 }
             );
             funFact = response.data.text;
@@ -27,11 +34,11 @@ router.get('/classify-number', async (req, res) => {
         }
 
         res.json({
-            number: number,
-            is_prime: isPrime(number),
-            is_perfect: isPerfect(number),
-            properties: properties,
-            digit_sum: getDigitSum(number),
+            number,
+            is_prime: isPrime(parsedNumber),
+            is_perfect: isPerfect(parsedNumber),
+            properties,
+            digit_sum: getDigitSum(parsedNumber),
             fun_fact: funFact
         });
     } catch (error) {
