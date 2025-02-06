@@ -59,4 +59,4 @@ cd number-classification-api
     ],
     "digit_sum": 11,
     "fun_fact": "371 is a narcissistic number."
-};
+}
