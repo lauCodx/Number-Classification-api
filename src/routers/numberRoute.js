@@ -11,11 +11,12 @@ router.get('/classify-number', async (req, res) => {
             return res.status(400).json({ error: true, number: "" });
         }
 
-        const parsedNumber = parseInt(number, 10);
-
-        if (isNaN(parsedNumber)) {
+        // Check if the number is a valid integer
+        if (!/^-?\d+$/.test(number)) {
             return res.status(400).json({ error: true, number });
         }
+
+        const parsedNumber = parseInt(number, 10);
 
         const properties = [];
         if (isArmstrong(parsedNumber)) properties.push('armstrong');
